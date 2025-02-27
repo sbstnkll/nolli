@@ -1,0 +1,6 @@
+mbtiles:
+  paths:
+    - "germany-latest.mbtiles"
+
+fonts:
+  - "./noto/Noto_Sans/static/NotoSans-Regular.ttf"

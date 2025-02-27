@@ -1,0 +1,38 @@
+name: Validate PR
+
+on: [pull_request]
+
+jobs:
+
+  job:
+    name: Run integrity test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the changes
+        uses: actions/checkout@v4
+
+      - name: Tests
+        run: |
+          make test
+
+      - name: Save test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-result
+          path: build
+
+      - name: Build postgis docker
+        run: |
+          pushd docker/postgis
+          docker build .
+          popd
+
+      - name: Build generate-vectortiles docker
+        continue-on-error: true
+        run: |
+          pushd docker/generate-vectortiles
+          docker build .
+          popd
+
+        # Do not auto-build import-data and postgis-preload due to high download requirements
